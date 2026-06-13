@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FH6 Tuning Calculator Pro V7.2 (終極檔位優化版)</title>
+    <title>FH6 Tuning Calculator Pro V7.3 (實戰極限修正版)</title>
     <style>
         :root {
             --bg-color: #0f0f12;
@@ -178,7 +178,19 @@
         .upgrade-list { margin: 0; padding-left: 20px; font-size: 0.9rem; line-height: 1.6; color: #f1f2f6; }
         .diag-box { background-color: #1e272e; border-left: 4px solid #54a0ff; padding: 15px 20px; border-radius: 0 6px 6px 0; margin-top: 15px; display: none; }
         .diag-box h4 { margin: 0 0 10px 0; color: #54a0ff; }
-        footer { text-align: center; padding: 30px; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border-color); margin-top: 50px; }
+        
+        /* 調整 footer 讓計數器置中顯示好看 */
+        footer { 
+            text-align: center; 
+            padding: 30px; 
+            color: var(--text-muted); 
+            font-size: 0.85rem; 
+            border-top: 1px solid var(--border-color); 
+            margin-top: 50px; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
@@ -293,14 +305,14 @@
                     </thead>
                     <tbody>
                         <tr><td><span class="section-tag">胎壓</span></td><td>胎壓 (FH6 安全範圍)</td><td id="out-pf" class="val-highlight">-</td><td id="out-pr" class="val-highlight">-</td></tr>
-                        <tr><td><span class="section-tag">高度</span></td><td>車身高度 (Ride Height)</td><td id="out-rhf" class="val-highlight">-</td><td id="out-rhr" class="val-highlight">-</td></tr>
+                        <tr><td><span class="section-tag">高度</span></td><td>車身高度 (拉桿相對位置)</td><td id="out-rhf" class="val-highlight" style="font-size: 0.95rem;">-</td><td id="out-rhr" class="val-highlight" style="font-size: 0.95rem;">-</td></tr>
                         <tr><td><span class="section-tag">對地</span></td><td>外傾角 (Camber)</td><td id="out-camf" class="val-highlight">-</td><td id="out-camr" class="val-highlight">-</td></tr>
                         <tr><td><span class="section-tag">對地</span></td><td>束角 (Toe)</td><td id="out-toef" class="val-highlight">-</td><td id="out-toer" class="val-highlight">-</td></tr>
                         <tr><td><span class="section-tag">懸吊</span></td><td>防傾桿 (Anti-Roll Bars)</td><td id="out-arbf" class="val-highlight">-</td><td id="out-arbr" class="val-highlight">-</td></tr>
                         <tr><td><span class="section-tag">懸吊</span></td><td>彈簧剛性 (Springs)</td><td id="out-spf" class="val-highlight">-</td><td id="out-spr" class="val-highlight">-</td></tr>
                         <tr><td><span class="section-tag">阻尼</span></td><td>回彈阻尼 (Rebound)</td><td id="out-rebf" class="val-highlight">-</td><td id="out-rebr" class="val-highlight">-</td></tr>
                         <tr><td><span class="section-tag">阻尼</span></td><td>壓縮阻尼 (Bump)</td><td id="out-bumpf" class="val-highlight">-</td><td id="out-bumpr" class="val-highlight">-</td></tr>
-                        <tr><td><span class="section-tag" style="background-color: #ffa502; color:#000;">空力</span></td><td>下壓力 (Downforce)</td><td id="out-aerof" class="val-highlight">-</td><td id="out-aeror" class="val-highlight">-</td></tr>
+                        <tr><td><span class="section-tag" style="background-color: #ffa502; color:#000;">空力</span></td><td>下壓力 (拉桿相對位置)</td><td id="out-aerof" class="val-highlight" style="font-size: 0.95rem;">-</td><td id="out-aeror" class="val-highlight" style="font-size: 0.95rem;">-</td></tr>
                         <tr><td><span class="section-tag">傳動</span></td><td>差速器 (Differential)</td><td id="out-diff-f" class="val-highlight">-</td><td id="out-diff-r" class="val-highlight">-</td></tr>
                     </tbody>
                     <tbody id="gear-tune-tbody">
@@ -343,7 +355,7 @@
 
     <footer>
         <p>&copy; 2026 Forza Horizon Tuning Workshop.</p>
-<div style="margin-top: 10px;">
+        <div style="margin-top: 10px;">
             <img src="https://visitor-badge.laobi.icu/badge?page_id=kevinwu.fh6calculator" alt="visitors">
         </div>
     </footer>
@@ -375,14 +387,13 @@
             ]
         };
 
-        // 智慧切換：當選取甩尾時，檔位自動切換到 4 檔
         function onStyleChange() {
             const style = document.getElementById('tuneStyle').value;
             const transSelect = document.getElementById('transType');
             if (style === 'drift') {
                 transSelect.value = "4";
             } else if (transSelect.value === "4") {
-                transSelect.value = "6"; // 取消甩尾時，預設切回 6 檔
+                transSelect.value = "6";
             }
         }
 
@@ -429,7 +440,6 @@
                 let minARB = 1.0, maxARB = 40.0;
                 let minRebound = 1.0, maxRebound = 13.0;
 
-                // 根據風格與檔位智能生成建議套件
                 let transmissionName = "";
                 if (style === 'drift' && numGears === 4) {
                     transmissionName = "【必裝】甩尾變速箱 (專屬 4 檔位設定，利於長彎維持高轉速)";
@@ -445,33 +455,38 @@
                 recommendedUpgrades = [
                     "【必裝】賽車級前後防傾桿 (解鎖防傾桿精確調整)",
                     transmissionName,
-                    "【建議】賽車級可調式前後導流翼 (視賽事與外觀需求安裝，以解鎖下壓力調整)"
+                    "【建議】賽車級可調式前後導流翼 (以解鎖下壓力調整。若無則忽略此項數值)"
                 ];
 
                 if (driveType !== 'FWD') recommendedUpgrades.push(diffRearName);
                 if (driveType === 'FWD' || driveType === 'AWD') recommendedUpgrades.push(diffFrontName);
 
+                // 避震器、防傾桿數值變數
                 let pf, pr, arbf, arbr, spf, spr, rebf, rebr, bumpf, bumpr;
-                let camf, camr, toef, toer, rhf, rhr, finalDrive;
-                let aerof, aeror; 
+                let camf, camr, toef, toer, finalDrive;
+                // 車高與空力改為文字字串
+                let rhf, rhr, aerof, aeror; 
 
-                // 終傳比基底計算
                 let baseFinal = 3.65; 
                 if (hp > 700) baseFinal -= 0.35;
                 else if (hp > 450) baseFinal -= 0.15;
                 if (torque > 75) baseFinal -= 0.10;
 
+                // --- 依風格分流計算 (包含車高與空力拉桿邏輯修正) ---
                 if (style === 'balanced') {
                     recommendedUpgrades.unshift("【必裝】賽車級彈簧與避震器 (解鎖街頭與公路常規賽循跡性)");
                     recommendedUpgrades.push("【胎質建議】跑車級、半熱熔或賽車熱熔胎 (依據 PI 級別分配)");
 
                     pf = 29.5; pr = 28.5; 
                     camf = -1.8; camr = -1.2; toef = 0.0; toer = 0.0;
-                    rhf = 13.5; rhr = 13.8;
+                    
+                    // 相對拉桿文字
+                    rhf = "最低值 (Min) 往右調 +2 格";
+                    rhr = "最低值 (Min) 往右調 +3 格";
+                    aerof = "中等偏右 (過彎方向 60%)";
+                    aeror = "中等偏右 (過彎方向 70%)";
+                    
                     finalDrive = baseFinal;
-
-                    aerof = (hp > 500) ? 55 : 35;
-                    aeror = (hp > 500) ? 90 : 65;
 
                     arbf = ((maxARB - minARB) * frontRatio) + minARB;
                     arbr = ((maxARB - minARB) * rearRatio) + minARB;
@@ -482,16 +497,19 @@
                     
                 } else if (style === 'drift') {
                     recommendedUpgrades.unshift("【必裝】甩尾專用懸吊套件 (取得大轉向舵角與前傾角修正)");
-                    recommendedUpgrades.push("【胎質建議】甩尾專用胎 或 原廠/街頭輪胎 (⚠️後輪切勿使用全熱熔胎，否則抓地力過高難以起甩)");
+                    recommendedUpgrades.push("【胎質建議】甩尾專用胎 或 原廠/街頭輪胎 (⚠️後輪切勿使用全熱熔胎，否則難以起甩)");
                     recommendedUpgrades.push("【動力建議】強烈建議加裝渦輪或機械增壓，將馬力推至 600hp 以上維持橫移");
 
                     pf = 30.0; pr = 29.0; 
                     camf = -4.5; camr = -0.5; toef = 0.2; toer = -0.1;
-                    rhf = 15.0; rhr = 14.5;
-                    finalDrive = baseFinal + 0.40; 
 
-                    aerof = 10;
-                    aeror = 0; 
+                    // 相對拉桿文字
+                    rhf = "最低值 (拉桿全靠左)";
+                    rhr = "最低值 (拉桿全靠左)";
+                    aerof = "最低值 (車速方向全靠左)";
+                    aeror = "完全移除 或 最低值";
+
+                    finalDrive = baseFinal + 0.40; 
 
                     arbf = (((maxARB - minARB) * frontRatio) + minARB) * 0.75;
                     arbr = (((maxARB - minARB) * rearRatio) + minARB) * 1.30; 
@@ -506,11 +524,14 @@
 
                     pf = 26.5; pr = 25.5; 
                     camf = -1.0; camr = -0.8; toef = 0.0; toer = 0.0;
-                    rhf = 23.5; rhr = 24.0; 
-                    finalDrive = baseFinal + 0.20;
 
-                    aerof = 20;
-                    aeror = 40;
+                    // 相對拉桿文字
+                    rhf = "最高值 (拉桿全靠右)";
+                    rhr = "最高值 (拉桿全靠右)";
+                    aerof = "最高值 (過彎方向全靠右)";
+                    aeror = "最高值 (過彎方向全靠右)";
+
+                    finalDrive = baseFinal + 0.20;
 
                     let offroadMaxSp = maxSpring * 0.65; 
                     arbf = (((maxARB - minARB) * frontRatio) + minARB) * 0.40;
@@ -536,13 +557,13 @@
                 } else if (driveType === 'AWD') {
                     if (style === 'drift') {
                         diffF = "加速: 100% / 減速: 100% (甩尾鎖死設定)";
-                        diffR = "加速: 100% / 減速: 100% (甩尾鎖死設定) (中央分配: 80% 後軸)";
+                        diffR = "加速: 100% / 減速: 100% (甩尾鎖死) (分配: 80% 後軸)";
                     } else if (style === 'offroad') {
                         diffF = "加速: 55% / 減速: 10%";
-                        diffR = "加速: 70% / 減速: 25% (中央分配: 60% 後軸)";
+                        diffR = "加速: 70% / 減速: 25% (分配: 60% 後軸)";
                     } else {
                         diffF = "加速: 40% / 減速: 10%";
-                        diffR = "加速: 65% / 減速: 25% (中央分配: 65% 後軸)";
+                        diffR = "加速: 65% / 減速: 25% (分配: 65% 後軸)";
                     }
                 } else if (driveType === 'FWD') {
                     diffR = "不適用 (N/A)";
@@ -550,9 +571,6 @@
                     else diffF = "加速: 45% / 減速: 15%";
                 }
 
-                // ----------------------------------------------------
-                // ⚙️ 全新動態齒輪比演算法 (支援 4 ~ 10 檔位幾何分配)
-                // ----------------------------------------------------
                 let gears = [];
                 let g1, g_last;
 
@@ -567,7 +585,6 @@
                     g_last = numGears >= 8 ? 0.65 : 0.78;
                 }
 
-                // 使用次方指數曲線分布，讓低速檔跨距大，高速檔緊密
                 for (let i = 0; i < numGears; i++) {
                     if (i === 0) gears.push(g1);
                     else if (i === numGears - 1) gears.push(g_last);
@@ -587,11 +604,13 @@
                     listContainer.appendChild(li);
                 });
 
-                // 更新前端數值
+                // 更新前端數值顯示
                 document.getElementById('out-pf').textContent = pf.toFixed(1) + " PSI";
                 document.getElementById('out-pr').textContent = pr.toFixed(1) + " PSI";
-                document.getElementById('out-rhf').textContent = rhf.toFixed(1) + " cm";
-                document.getElementById('out-rhr').textContent = rhr.toFixed(1) + " cm";
+                // 車高改為文字顯示 (不再加上 cm)
+                document.getElementById('out-rhf').textContent = rhf;
+                document.getElementById('out-rhr').textContent = rhr;
+                
                 document.getElementById('out-camf').textContent = camf.toFixed(1) + "°";
                 document.getElementById('out-camr').textContent = camr.toFixed(1) + "°";
                 document.getElementById('out-toef').textContent = toef.toFixed(1) + "°";
@@ -604,12 +623,14 @@
                 document.getElementById('out-rebr').textContent = rebr.toFixed(1);
                 document.getElementById('out-bumpf').textContent = bumpf.toFixed(1);
                 document.getElementById('out-bumpr').textContent = bumpr.toFixed(1);
-                document.getElementById('out-aerof').textContent = style === 'drift' ? aerof + " kg (最小)" : aerof + " kg";
-                document.getElementById('out-aeror').textContent = style === 'drift' ? "0 kg (移除)" : aeror + " kg";
+                
+                // 空力改為文字顯示 (不再加上 kg)
+                document.getElementById('out-aerof').textContent = aerof;
+                document.getElementById('out-aeror').textContent = aeror;
+                
                 document.getElementById('out-diff-f').textContent = diffF;
                 document.getElementById('out-diff-r').textContent = diffR;
 
-                // 渲染齒輪表格
                 const gearTbody = document.getElementById('gear-tune-tbody');
                 gearTbody.innerHTML = `
                     <tr style="border-top: 2px solid var(--border-color); background-color: #1e1e2d;">
@@ -637,12 +658,12 @@
 
                 currentTuneData = {
                     carName, blockType: blockType.toFixed(2), hp, torque, weight, frontRatio: (frontRatio*100).toFixed(0), driveType, style,
-                    pf: pf.toFixed(1), pr: pr.toFixed(1), rhf: rhf.toFixed(1), rhr: rhr.toFixed(1),
+                    pf: pf.toFixed(1), pr: pr.toFixed(1), 
+                    rhf: rhf, rhr: rhr, // 直接儲存文字
                     camf: camf.toFixed(1), camr: camr.toFixed(1), toef: toef.toFixed(1), toer: toer.toFixed(1),
                     arbf: arbf.toFixed(2), arbr: arbr.toFixed(2), spf: spf.toFixed(1), spr: spr.toFixed(1),
                     rebf: rebf.toFixed(1), rebr: rebr.toFixed(1), bumpf: bumpf.toFixed(1), bumpr: bumpr.toFixed(1),
-                    aerof: style === 'drift' ? aerof + " kg (最小)" : aerof + " kg",
-                    aeror: style === 'drift' ? "0 kg (最小)" : aeror + " kg",
+                    aerof: aerof, aeror: aeror, // 直接儲存文字
                     diffF, diffR, finalDrive: finalDrive.toFixed(2),
                     gears: gears
                 };
@@ -678,7 +699,7 @@
                 } else if (prob === 'twitchy') {
                     advice = "<strong>【FH6 專家解法：高速彎轉向太敏感】</strong><br>1. <strong>胎壓調整：</strong>車子太神經質，請「稍微降低前/後胎壓」。<br>2. <strong>束角修正：</strong>前束角調整至接近 0°，避免過度的前輪外八。";
                 } else if (prob === 'boat') {
-                    advice = "<strong>【FH6 專家解法：車身側傾過大像坐船】</strong><br>1. <strong>結構加硬：</strong>防傾桿與彈簧整體偏軟，請同步加硬防傾桿與彈簧以支撐車身重心轉移。";
+                    advice = "<strong>【FH6 專家解法：車身側傾過大像坐船】</strong><br>1. <strong>結構加硬：</strong>防傾桿與彈簧整體偏軟，請同步加硬防傾桿與彈簧以支撐重心轉移。";
                 } else if (prob === 'exit_under') {
                     advice = "<strong>【FH6 專家解法：出彎加速推頭 / 補油門很差】</strong><br>1. <strong>齒比修正：</strong>出彎很差請「縮短二檔 / 三檔齒比」以壓榨推進力。<br>2. <strong>防傾桿優化：</strong>軟化前防傾桿以釋放前輪抓地。";
                 } else if (prob === 'exit_over') {
@@ -714,7 +735,7 @@
                 });
 
                 const reportText = `==================================================
-FORZA HORIZON 6 - 專業調校與改裝報告 (FH6優化版)
+FORZA HORIZON 6 - 專業調校與改裝報告 (FH6實戰優化版)
 ==================================================
 【基本車輛規格】
 車型名稱: ${d.carName}
@@ -728,20 +749,20 @@ FORZA HORIZON 6 - 專業調校與改裝報告 (FH6優化版)
 變速箱配置: ${d.gears.length} 檔位設定
 
 --------------------------------------------------
-【🛠️ 步驟一：改裝解鎖件 (FH6高階分流版)】
+【🛠️ 步驟一：改裝解鎖件 (FH6動態分流版)】
 ${upgradeText}
 
 --------------------------------------------------
 ⚙️ 【步驟二：精準調校參數清單】
 1. 胎壓: 前 ${d.pf} PSI | 後 ${d.pr} PSI
-2. 車身高度: 前 ${d.rhf} cm | 後 ${d.rhr} cm
+2. 車身高度: 前 [ ${d.rhf} ] | 後 [ ${d.rhr} ]
 3. 外傾角 (Camber): 前 ${d.camf}° | 後 ${d.camr}°
 4. 束角 (Toe): 前 ${d.toef}° | 後 ${d.toer}°
 5. 防傾桿 (ARB): 前 ${d.arbf} | 後 ${d.arbr}
 6. 彈簧剛性: 前 ${d.spf} kgf/mm | 後 ${d.spr} kgf/mm
 7. 回彈阻尼 (Rebound): 前 ${d.rebf} | 後 ${d.rebr}
 8. 壓縮阻尼 (Bump): 前 ${d.bumpf} | 後 ${d.bumpr}
-9. 空力下壓力: 前 ${d.aerof} | 後 ${d.aeror}
+9. 空力下壓力: 前 [ ${d.aerof} ] | 後 [ ${d.aeror} ]
 10. 差速器設定: 前軸 [${d.diffF}] | 後軸 [${d.diffR}]
 
 --------------------------------------------------
