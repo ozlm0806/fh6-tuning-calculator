@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FH6 Tuning Calculator Pro V7.6 (全參數完美版)</title>
+    <title>FH6 Tuning Calculator Pro V8.2 (終極雙底圖版)</title>
     <style>
         :root {
             --bg-color: #0f0f12;
@@ -92,6 +92,7 @@
             border-radius: 8px;
             padding: 25px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            margin-bottom: 25px;
         }
 
         .card h2 {
@@ -172,6 +173,9 @@
         .btn-primary { background-color: var(--accent-color); color: white; }
         .btn-primary:hover { background-color: var(--accent-hover); }
         .btn-success { background-color: var(--success-color); color: #000; }
+        .btn-success:hover { background-color: #26b360; }
+        .btn-special { background-color: #54a0ff; color: #000; }
+        .btn-special:hover { background-color: #2e86de; }
 
         .tune-table { width: 100%; border-collapse: collapse; }
         .tune-table th, .tune-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border-color); }
@@ -193,6 +197,36 @@
         .diag-box { background-color: #1e272e; border-left: 4px solid #54a0ff; padding: 15px 20px; border-radius: 0 6px 6px 0; margin-top: 15px; display: none; }
         .diag-box h4 { margin: 0 0 10px 0; color: #54a0ff; }
         
+        .share-section {
+            background: linear-gradient(145deg, #1a1a22 0%, #111116 100%);
+            border: 1px solid #ff3838;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .share-section::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background-color: #ff3838;
+        }
+
+        .canvas-container {
+            display: none; 
+            flex-direction: column;
+            align-items: center;
+            margin-top: 25px;
+            background-color: #0c0c10;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px dashed var(--border-color);
+        }
+
+        canvas {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.9);
+            background-color: #000;
+        }
+
         footer { 
             text-align: center; 
             padding: 30px; 
@@ -210,31 +244,36 @@
 
     <div class="navbar">
         <h1>Forza Horizon 6 Tuning Calculator</h1>
-        <p>FH6 終極調校工坊 - 支援全地形物理參數與單位切換</p>
+        <p>FH6 終極調校工坊 - 全地形物理參數與東京慶典分享</p>
     </div>
 
     <div class="wrapper">
         <div class="flow-box">
-            <div class="flow-step">1. 輪胎、輪圈與輪距</div>
+            <div class="flow-step">1. 輪胎輪距</div>
             <div class="flow-step">2. 齒比設定</div>
             <div class="flow-step">3. 定位幾何</div>
             <div class="flow-step">4. 防傾桿 (Base)</div>
-            <div class="flow-step">5. 彈簧剛性</div>
-            <div class="flow-step">6. 阻尼軟硬</div>
-            <div class="flow-step">7. 空力下壓力</div>
-            <div class="flow-step">8. 差速器鎖定</div>
+            <div class="flow-step">5. 彈簧阻尼</div>
+            <div class="flow-step">6. 空力下壓力</div>
+            <div class="flow-step">7. 差速器鎖定</div>
+            <div class="flow-step" style="background-color: #ff3838;">8. 社群分享卡</div>
         </div>
 
+        <!-- 🌟 第一區塊：純粹的調校介面 -->
         <div class="main-layout">
             <div class="card">
                 <h2>1. 輸入改裝後完整規格</h2>
-                <div class="form-row">
+                <div class="form-row-3">
                     <div class="form-group">
-                        <label for="carName">車輛型號備註</label>
+                        <label for="carBrand">車輛品牌 (Make)</label>
+                        <input type="text" id="carBrand" value="Nissan">
+                    </div>
+                    <div class="form-group">
+                        <label for="carName">車輛型號 (Model)</label>
                         <input type="text" id="carName" value="Skyline GT-R 2000">
                     </div>
                     <div class="form-group">
-                        <label for="blockType">氣缸體數據 (數值顯示)</label>
+                        <label for="blockType">氣缸體 (引擎數值)</label>
                         <input type="number" step="0.01" id="blockType" value="3.00">
                     </div>
                 </div>
@@ -270,7 +309,7 @@
                     <div class="form-group">
                         <label for="unitSystem">胎壓顯示單位</label>
                         <select id="unitSystem">
-                            <option value="imperial" selected>英制 (PSI) - 預設</option>
+                            <option value="imperial" selected>英制 (PSI)</option>
                             <option value="metric">公制 (BAR)</option>
                         </select>
                     </div>
@@ -289,7 +328,7 @@
                     <div class="form-group">
                         <label for="transType">變速箱檔位數量 (Transmission)</label>
                         <select id="transType">
-                            <option value="4">4 檔 (甩尾專用 / 拉力 / 老車)</option>
+                            <option value="4">4 檔 (甩尾與直線加速建議)</option>
                             <option value="5">5 檔 (運動級)</option>
                             <option value="6" selected>6 檔 (賽車級標準)</option>
                             <option value="7">7 檔 (賽車級 / 超跑)</option>
@@ -319,8 +358,7 @@
                 </div>
 
                 <div class="btn-container">
-                    <button class="btn btn-primary" onclick="generateTune()">一鍵計算 FH6 參數</button>
-                    <button class="btn btn-success" onclick="downloadTuneReport()">下載調校報告</button>
+                    <button class="btn btn-primary" onclick="generateTune()" style="grid-column: span 2;">一鍵計算 FH6 參數</button>
                 </div>
 
                 <div class="upgrade-box">
@@ -366,6 +404,10 @@
                         </tr>
                     </tbody>
                 </table>
+                
+                <div class="btn-container" style="margin-top: 15px;">
+                    <button class="btn btn-success" onclick="downloadTuneReport()" style="grid-column: span 2;">下載純文字調校報告 (TXT)</button>
+                </div>
             </div>
         </div>
 
@@ -395,8 +437,50 @@
                 <p id="diag-text"></p>
             </div>
         </div>
+
+        <!-- 🌟 第四區塊：全新獨立的傳奇工坊分享中心 -->
+        <div class="card share-section" id="shareSection">
+            <h2 style="color: #ff3838; border-left: 5px solid #fff;">4. 傳奇工坊分享中心 (生成小卡)</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">調校完成且在遊戲中取得滿意成績了嗎？在這裡輸入你的分享資訊，生成超華麗的專屬調校名片吧！</p>
+            
+            <div class="form-row-3">
+                <div class="form-group">
+                    <label for="piClass">賽事級別 (如 S1 900)</label>
+                    <input type="text" id="piClass" value="S1 900">
+                </div>
+                <div class="form-group">
+                    <label for="shareCode">遊戲內 9 位數分享碼</label>
+                    <input type="text" id="shareCode" placeholder="範例: 554 123 789">
+                </div>
+            </div>
+            
+            <div class="form-row-3">
+                <div class="form-group">
+                    <label for="playerAccountType">右上方身分圖示</label>
+                    <select id="playerAccountType">
+                        <option value="threads" selected>Threads 帳號</option>
+                        <option value="xbox">Xbox 玩家代號 (ID)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="playerAccountID">玩家社群帳號 / ID</label>
+                    <input type="text" id="playerAccountID" placeholder="請輸入你的帳號 (如 Drift_King)">
+                </div>
+            </div>
+
+            <button class="btn btn-special" style="width: 100%; margin-top: 10px;" onclick="generateShareCard()">🎨 生成/更新專屬東京櫻花分享卡</button>
+
+            <!-- 隱藏的 Canvas 容器，生成後才會顯示 -->
+            <div class="canvas-container" id="canvasWrapper">
+                <h3 style="font-size: 1.1rem; color: #ff9ff3; margin: 0 0 15px 0;">✨ 你的專屬東京祭典調校名片已生成 ✨</h3>
+                <!-- 我們設定 Canvas 尺寸為 1024x536，以完美匹配底圖比例 -->
+                <canvas id="shareCardCanvas" width="1024" height="536"></canvas>
+                <button class="btn btn-success" style="width: 100%; margin-top: 15px; background-color: #2ed573; color: #000;" onclick="downloadCardImage()">💾 點此下載高畫質分享圖卡 (PNG)</button>
+            </div>
+        </div>
     </div>
 
+    <!-- 計數器安全保留 -->
     <footer>
         <p>&copy; 2026 Forza Horizon Tuning Workshop.</p>
         <div style="margin-top: 10px;">
@@ -407,6 +491,12 @@
     <script>
         let currentTuneData = null;
         let recommendedUpgrades = [];
+
+        // 🌟 預載底圖圖片 (Preload) 避免生成時閃爍或載入失敗
+        const bgThreads = new Image();
+        bgThreads.src = 'bg_threads.jpg';
+        const bgXbox = new Image();
+        bgXbox.src = 'bg_xbox.jpg';
 
         const problemMatrix = {
             entry: [
@@ -471,8 +561,10 @@
             }
         }
 
+        // 核心引擎：只負責計算參數
         function generateTune() {
             try {
+                const carBrand = document.getElementById('carBrand').value || "Nissan";
                 const carName = document.getElementById('carName').value || "未命名車輛";
                 const blockType = parseFloat(document.getElementById('blockType').value) || 3.40;
                 const hp = parseFloat(document.getElementById('hp').value) || 300;
@@ -523,11 +615,7 @@
                 let pf, pr, arbf, arbr, spf, spr, rebf, rebr, bumpf, bumpr;
                 let camf, camr, toef, toer, finalDrive;
                 let calcRhf, calcRhr, calcAerof, calcAeror; 
-                
-                // 🌟 新增三個外觀/物理聯動變數
-                let tireWidthF, tireWidthR;
-                let wheelF, wheelR; 
-                let trackWidthF, trackWidthR; 
+                let tireWidthF, tireWidthR, wheelF, wheelR, trackWidthF, trackWidthR; 
 
                 let baseFinal = 3.65; 
                 if (hp > 700) baseFinal -= 0.35;
@@ -536,14 +624,11 @@
 
                 if (style === 'balanced') {
                     recommendedUpgrades.unshift("【必裝】賽車級彈簧與避震器 (解鎖街頭與公路常規賽循跡性)");
-                    recommendedUpgrades.push("【胎質建議】跑車級、半熱熔或賽車熱熔胎 (依據 PI 級別分配)");
+                    recommendedUpgrades.push("【胎質建議】跑車級、半熱熔或賽車熱熔胎");
                     
-                    tireWidthF = "加寬 1~2 階 (提升入彎抓地)";
-                    tireWidthR = "加寬至極限 (確保出彎推進力)";
-                    wheelF = "原廠 或 加大 1 吋 (18-19吋)";
-                    wheelR = "原廠 或 加大 1 吋 (18-19吋)";
-                    trackWidthF = "墊到最寬 (Max) 增加穩定性";
-                    trackWidthR = "墊到最寬 (Max) 增加穩定性";
+                    tireWidthF = "加寬 1~2 階"; tireWidthR = "加寬至極限";
+                    wheelF = "原廠 或 加大 1 吋"; wheelR = "原廠 或 加大 1 吋";
+                    trackWidthF = "墊到最寬 (Max)"; trackWidthR = "墊到最寬 (Max)";
 
                     pf = 29.5; pr = 28.5; 
                     camf = -1.8; camr = -1.2; toef = 0.0; toer = 0.0;
@@ -564,17 +649,13 @@
                     recommendedUpgrades.unshift("【必裝】甩尾專用懸吊套件 (取得大轉向舵角與前傾角修正)");
                     recommendedUpgrades.push("【胎質建議】甩尾專用胎 或 街頭輪胎 (⚠️後輪切勿使用全熱熔胎)");
                     
-                    tireWidthF = "加到最寬 (極致指向性)";
-                    tireWidthR = "維持原廠 或 僅加寬 1 階 (利於起甩)";
-                    wheelF = "18 吋或更大 (保持轉向清晰)";
-                    wheelR = "18 吋 (保留胎壁滑移彈性)";
-                    trackWidthF = "墊到最寬 (Max) 預防大角度干涉";
-                    trackWidthR = "維持原廠 或 微墊 (控制滑移靈活度)";
+                    tireWidthF = "加到最寬 (指向)"; tireWidthR = "維持原廠 / 微加寬";
+                    wheelF = "18 吋或更大 (轉向清晰)"; wheelR = "18 吋 (保留滑移彈性)";
+                    trackWidthF = "墊到最寬 (Max)"; trackWidthR = "維持原廠 / 微墊寬";
 
                     pf = 30.0; pr = 29.0; 
                     camf = -4.5; camr = -0.5; toef = 0.2; toer = -0.1;
-                    calcRhf = limRhfMin;
-                    calcRhr = limRhrMin;
+                    calcRhf = limRhfMin; calcRhr = limRhrMin;
                     calcAerof = limAerofMin + (limAerofMax - limAerofMin) * 0.10;
                     calcAeror = limAerorMin;
                     finalDrive = baseFinal + 0.40; 
@@ -587,20 +668,16 @@
                     rebr = (((maxRebound - minRebound) * rearRatio) + minRebound) * 1.15;
                     
                 } else if (style === 'offroad') {
-                    recommendedUpgrades.unshift("【必裝】拉力/越野專用避震器 (取得 FH6 應付越野跳躍的最長懸吊行程)");
-                    recommendedUpgrades.push("【必裝】越野/拉力專用輪胎材質 (泥地與碎石路段抓地核心)");
+                    recommendedUpgrades.unshift("【必裝】拉力/越野專用避震器 (取得最長懸吊行程)");
+                    recommendedUpgrades.push("【必裝】越野/拉力專用輪胎材質 (泥地與碎石抓地核心)");
 
-                    tireWidthF = "加寬至極限 (越野接地面積即王道)";
-                    tireWidthR = "加寬至極限 (越野接地面積即王道)";
-                    wheelF = "維持原廠 / 最小尺寸 (最厚胎壁防衝擊)";
-                    wheelR = "維持原廠 / 最小尺寸 (最厚胎壁防衝擊)";
-                    trackWidthF = "墊到最寬 (Max) 防止翻車";
-                    trackWidthR = "墊到最寬 (Max) 防止翻車";
+                    tireWidthF = "加寬至極限"; tireWidthR = "加寬至極限";
+                    wheelF = "維持原廠 / 最小尺寸"; wheelR = "維持原廠 / 最小尺寸";
+                    trackWidthF = "墊到最寬 (Max)"; trackWidthR = "墊到最寬 (Max)";
 
                     pf = 26.5; pr = 25.5; 
                     camf = -1.0; camr = -0.8; toef = 0.0; toer = 0.0;
-                    calcRhf = limRhfMin + (limRhfMax - limRhfMin) * 0.90;
-                    calcRhr = limRhrMax;
+                    calcRhf = limRhfMin + (limRhfMax - limRhfMin) * 0.90; calcRhr = limRhrMax;
                     calcAerof = limAerofMin + (limAerofMax - limAerofMin) * 0.25;
                     calcAeror = limAerorMin + (limAerorMax - limAerorMin) * 0.35;
                     finalDrive = baseFinal + 0.20;
@@ -614,63 +691,49 @@
                     rebr = (((maxRebound - minRebound) * rearRatio) + minRebound) * 0.75;
 
                 } else if (style === 'drag') {
-                    recommendedUpgrades.unshift("【必裝】直線加速專用胎 (Drag Tires - 提供終極縱向抓地力)");
-                    recommendedUpgrades.unshift("【必裝】賽車級懸吊套件 (Race Suspension - 用於精調重心)");
+                    recommendedUpgrades.unshift("【必裝】直線加速專用胎 (Drag Tires - 終極縱向抓地)");
+                    recommendedUpgrades.unshift("【必裝】賽車級懸吊套件 (用以精調重心)");
                     
-                    tireWidthF = "維持原廠最窄 (減少滾動摩擦力)";
-                    tireWidthR = "加寬至極限 (最大化起步抓地力)";
-                    wheelF = "最小尺寸 (減輕輪圈總重)";
-                    wheelR = "最小尺寸 (最大化皺褶胎壁效應)";
-                    trackWidthF = "維持原廠 (無須墊寬)";
-                    trackWidthR = "維持原廠 (無須墊寬)";
+                    tireWidthF = "維持原廠最窄"; tireWidthR = "加寬至極限";
+                    wheelF = "最小尺寸 (減重)"; wheelR = "最小尺寸 (皺褶胎壁)";
+                    trackWidthF = "維持原廠"; trackWidthR = "維持原廠";
 
                     pf = 35.0; pr = 15.0; 
                     camf = 0.0; camr = 0.0; toef = 0.0; toer = 0.0; 
-                    calcRhf = limRhfMax;  
-                    calcRhr = limRhrMin;  
-                    calcAerof = limAerofMin; 
-                    calcAeror = limAerorMin;
+                    calcRhf = limRhfMax; calcRhr = limRhrMin;  
+                    calcAerof = limAerofMin; calcAeror = limAerorMin;
                     finalDrive = baseFinal - 0.25; 
 
-                    arbf = minARB; 
-                    arbr = maxARB; 
-                    spf = minSpring; 
-                    spr = maxSpring; 
-                    rebf = minRebound; 
-                    rebr = maxRebound;
+                    arbf = minARB; arbr = maxARB; 
+                    spf = minSpring; spr = maxSpring; 
+                    rebf = minRebound; rebr = maxRebound;
                 }
 
                 if (spf > maxSpring) spf = maxSpring; if (spf < minSpring) spf = minSpring;
                 if (spr > maxSpring) spr = maxSpring; if (spr < minSpring) spr = minSpring;
 
                 if (style === 'drag') {
-                    bumpf = maxRebound * 0.6; 
-                    bumpr = minRebound * 0.6;
+                    bumpf = maxRebound * 0.6; bumpr = minRebound * 0.6;
                 } else {
-                    bumpf = rebf * 0.6;
-                    bumpr = rebr * 0.6;
+                    bumpf = rebf * 0.6; bumpr = rebr * 0.6;
                 }
 
                 let diffF = "", diffR = "";
                 if (driveType === 'RWD') {
                     diffF = "不適用 (N/A)";
-                    if (style === 'drift') diffR = "加速: 100% / 減速: 100% (甩尾鎖死設定)";
+                    if (style === 'drift') diffR = "加速: 100% / 減速: 100% (甩尾鎖死)";
                     else if (style === 'drag') diffR = "加速: 100% / 減速: 100% (直線鎖死)";
                     else if (style === 'offroad') diffR = "加速: 75% / 減速: 30%";
                     else diffR = "加速: 60% / 減速: 20%";
                 } else if (driveType === 'AWD') {
                     if (style === 'drift') {
-                        diffF = "加速: 100% / 減速: 100% (甩尾鎖死設定)";
-                        diffR = "加速: 100% / 減速: 100% (甩尾鎖死) (分配: 80% 後軸)";
+                        diffF = "加速: 100% / 減速: 100%"; diffR = "加速: 100% / 減速: 100% (分配: 80% 後)";
                     } else if (style === 'drag') {
-                        diffF = "加速: 100% / 減速: 100%";
-                        diffR = "加速: 100% / 減速: 100% (分配: 75% 後軸)";
+                        diffF = "加速: 100% / 減速: 100%"; diffR = "加速: 100% / 減速: 100% (分配: 75% 後)";
                     } else if (style === 'offroad') {
-                        diffF = "加速: 55% / 減速: 10%";
-                        diffR = "加速: 70% / 減速: 25% (分配: 60% 後軸)";
+                        diffF = "加速: 55% / 減速: 10%"; diffR = "加速: 70% / 減速: 25% (分配: 60% 後)";
                     } else {
-                        diffF = "加速: 40% / 減速: 10%";
-                        diffR = "加速: 65% / 減速: 25% (分配: 65% 後軸)";
+                        diffF = "加速: 40% / 減速: 10%"; diffR = "加速: 65% / 減速: 25% (分配: 65% 後)";
                     }
                 } else if (driveType === 'FWD') {
                     diffR = "不適用 (N/A)";
@@ -681,19 +744,14 @@
 
                 let gears = [];
                 let g1, g_last;
-
                 if (style === 'drift') {
-                    g1 = 3.15;
-                    g_last = numGears === 4 ? 1.28 : 0.86;
+                    g1 = 3.15; g_last = numGears === 4 ? 1.28 : 0.86;
                 } else if (style === 'offroad') {
-                    g1 = 3.45;
-                    g_last = 0.80;
+                    g1 = 3.45; g_last = 0.80;
                 } else if (style === 'drag') {
-                    g1 = 2.50; 
-                    g_last = 0.70;
+                    g1 = 2.50; g_last = 0.70;
                 } else {
-                    g1 = 2.89;
-                    g_last = numGears >= 8 ? 0.65 : 0.78;
+                    g1 = 2.89; g_last = numGears >= 8 ? 0.65 : 0.78;
                 }
 
                 for (let i = 0; i < numGears; i++) {
@@ -702,35 +760,23 @@
                     else {
                         let fraction = i / (numGears - 1);
                         let curve = Math.pow(fraction, 0.8);
-                        let val = g1 * Math.pow(g_last / g1, curve);
-                        gears.push(val);
+                        gears.push(g1 * Math.pow(g_last / g1, curve));
                     }
                 }
 
-                const listContainer = document.getElementById('upgrade-list-items');
-                listContainer.innerHTML = "";
-                recommendedUpgrades.forEach(item => {
-                    let li = document.createElement('li');
-                    li.textContent = item;
-                    listContainer.appendChild(li);
-                });
-
-                let pfBar = pf * 0.0689476;
-                let prBar = pr * 0.0689476;
+                let pfBar = pf * 0.0689476, prBar = pr * 0.0689476;
                 let pfStr = unitSystem === 'metric' ? pfBar.toFixed(2) + " BAR" : pf.toFixed(1) + " PSI";
                 let prStr = unitSystem === 'metric' ? prBar.toFixed(2) + " BAR" : pr.toFixed(1) + " PSI";
 
-                // 🌟 更新前端表格數據
+                // 填入前端畫面
                 document.getElementById('out-tirewidth-f').textContent = tireWidthF;
                 document.getElementById('out-tirewidth-r').textContent = tireWidthR;
                 document.getElementById('out-wheel-f').textContent = wheelF;
                 document.getElementById('out-wheel-r').textContent = wheelR;
                 document.getElementById('out-track-f').textContent = trackWidthF;
                 document.getElementById('out-track-r').textContent = trackWidthR;
-                
                 document.getElementById('out-pf').textContent = pfStr;
                 document.getElementById('out-pr').textContent = prStr;
-                
                 document.getElementById('out-rhf').textContent = calcRhf.toFixed(1) + " cm";
                 document.getElementById('out-rhr').textContent = calcRhr.toFixed(1) + " cm";
                 document.getElementById('out-camf').textContent = camf.toFixed(1) + "°";
@@ -741,10 +787,10 @@
                 document.getElementById('out-arbr').textContent = arbr.toFixed(2);
                 document.getElementById('out-spf').textContent = spf.toFixed(1) + " kgf/mm";
                 document.getElementById('out-spr').textContent = spr.toFixed(1) + " kgf/mm";
-                document.getElementById('out-rebf').textContent = rebf.toFixed(1);
-                document.getElementById('out-rebr').textContent = rebr.toFixed(1);
-                document.getElementById('out-bumpf').textContent = bumpf.toFixed(1);
-                document.getElementById('out-bumpr').textContent = bumpr.toFixed(1);
+                document.getElementById('out-rebf').textContent = rebf.toFixed(2);
+                document.getElementById('out-rebr').textContent = rebr.toFixed(2);
+                document.getElementById('out-bumpf').textContent = bumpf.toFixed(2);
+                document.getElementById('out-bumpr').textContent = bumpr.toFixed(2);
                 document.getElementById('out-aerof').textContent = calcAerof.toFixed(0) + " kg";
                 document.getElementById('out-aeror').textContent = calcAeror.toFixed(0) + " kg";
                 document.getElementById('out-diff-f').textContent = diffF;
@@ -775,26 +821,134 @@
                     gearTbody.innerHTML += row;
                 }
 
+                // 暫存全域資料
                 currentTuneData = {
-                    carName, blockType: blockType.toFixed(2), hp, torque, weight, frontRatio: (frontRatio*100).toFixed(0), driveType, style,
-                    tireWidthF: tireWidthF, tireWidthR: tireWidthR,
-                    wheelF: wheelF, wheelR: wheelR,
-                    trackWidthF: trackWidthF, trackWidthR: trackWidthR,
-                    pfStr: pfStr, prStr: prStr, 
-                    rhf: calcRhf.toFixed(1) + " cm", rhr: calcRhr.toFixed(1) + " cm", 
+                    carBrand, carName, blockType: blockType.toFixed(2), hp, torque, weight, frontRatio: (frontRatio*100).toFixed(0), driveType, style,
+                    tireWidthF, tireWidthR, wheelF, wheelR, trackWidthF, trackWidthR,
+                    pfStr, prStr, rhf: calcRhf.toFixed(1) + " cm", rhr: calcRhr.toFixed(1) + " cm", 
                     camf: camf.toFixed(1), camr: camr.toFixed(1), toef: toef.toFixed(1), toer: toer.toFixed(1),
                     arbf: arbf.toFixed(2), arbr: arbr.toFixed(2), spf: spf.toFixed(1), spr: spr.toFixed(1),
-                    rebf: rebf.toFixed(1), rebr: rebr.toFixed(1), bumpf: bumpf.toFixed(1), bumpr: bumpr.toFixed(1),
+                    rebf: rebf.toFixed(2), rebr: rebr.toFixed(2), bumpf: bumpf.toFixed(2), bumpr: bumpr.toFixed(2),
                     aerof: calcAerof.toFixed(0) + " kg", aeror: calcAeror.toFixed(0) + " kg", 
                     diffF, diffR, finalDrive: finalDrive.toFixed(2), gears: gears
                 };
+
+                window.scrollTo({ top: document.querySelector('.tune-table').offsetTop - 50, behavior: 'smooth' });
 
             } catch(e) {
                 alert("一鍵計算發生崩潰！錯誤原因: " + e.message);
             }
         }
 
+        // 🌟 生成分享小卡與底圖雷雕核心引擎
+        function generateShareCard() {
+            if (!currentTuneData) {
+                alert("請先在最上方點擊『一鍵計算 FH6 參數』完成調校數據！");
+                return;
+            }
+
+            // 抓取分享中心的社群資料
+            currentTuneData.piClass = document.getElementById('piClass').value || "S1 900";
+            currentTuneData.shareCode = document.getElementById('shareCode').value || "";
+            currentTuneData.accountType = document.getElementById('playerAccountType').value;
+            currentTuneData.accountID = document.getElementById('playerAccountID').value || "Anonymous";
+
+            // 顯示畫布容器
+            document.getElementById('canvasWrapper').style.display = 'flex';
+            
+            // 根據玩家選擇的帳號類型，決定要載入哪一張底圖
+            let selectedBgImage = currentTuneData.accountType === "threads" ? bgThreads : bgXbox;
+
+            // 檢查圖片是否已經載入成功，如果成功就直接畫，否則等載入完再畫
+            if (selectedBgImage.complete && selectedBgImage.naturalHeight !== 0) {
+                drawDataOnImage(selectedBgImage, currentTuneData);
+            } else {
+                selectedBgImage.onload = function() {
+                    drawDataOnImage(selectedBgImage, currentTuneData);
+                };
+                selectedBgImage.onerror = function() {
+                    alert("無法載入底圖，請確認 bg_threads.jpg 或 bg_xbox.jpg 已與網頁放在同一資料夾！");
+                };
+            }
+            
+            window.scrollTo({ top: document.getElementById('canvasWrapper').offsetTop - 50, behavior: 'smooth' });
+        }
+
+        function drawDataOnImage(imgElement, d) {
+            const canvas = document.getElementById('shareCardCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            // 1. 將選定的超帥底圖完整貼滿畫布
+            ctx.drawImage(imgElement, 0, 0, canvas.width, canvas.height);
+
+            // 2. 開始「雷射燙印」純數據
+            
+            // 品牌與型號 (MAKE & MODEL)
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "bold 32px Segoe UI, sans-serif";
+            ctx.fillText(d.carBrand.toUpperCase(), 80, 205); // MAKE 坐標
+            
+            ctx.font = "bold 38px Segoe UI, sans-serif";
+            ctx.fillText(d.carName, 80, 290); // MODEL 坐標
+
+            // 調校風格與級別 (STYLE & PI CLASS)
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "bold 30px Segoe UI, sans-serif";
+            // 置中對齊以符合框格
+            ctx.textAlign = "center"; 
+            ctx.fillText(d.style.toUpperCase(), 665, 235); // STYLE 框中心坐標
+            ctx.fillText(d.piClass.toUpperCase(), 865, 235); // PI CLASS 框中心坐標
+            ctx.textAlign = "left"; // 恢復靠左對齊
+
+            // 性能小字數據 (HORSEPOWER, WEIGHT, FRONT %)
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "bold 22px Segoe UI, sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText(`${d.hp} HP`, 580, 310);
+            ctx.fillText(`${d.weight} KG`, 740, 310);
+            ctx.fillText(`${d.frontRatio}%`, 890, 310);
+            
+            // 扭力數據 (TORQUE)
+            ctx.fillText(`${d.torque} KG-M`, 380, 345);
+            ctx.textAlign = "left"; // 恢復
+
+            // 右上角社群 ID (Xbox 或 Threads 帳號名)
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "bold 20px monospace, sans-serif";
+            ctx.textAlign = "center";
+            // 加上 @ 符號如果選的是 Threads
+            let displayId = d.accountType === "threads" ? `@${d.accountID}` : d.accountID;
+            ctx.fillText(displayId, 885, 140); 
+            ctx.textAlign = "left"; // 恢復
+
+            // 🌟 最重要的：9位數官方分享碼 (加上發光特效)
+            if(d.shareCode) {
+                ctx.fillStyle = "#ff3838";
+                ctx.font = "bold 90px monospace, sans-serif";
+                ctx.textAlign = "center";
+                ctx.shadowBlur = 20;
+                ctx.shadowColor = "#ff3838";
+                
+                // 為了視覺霸氣，字元間距用簡單空格模擬，置中於橘框
+                let formattedShareCode = d.shareCode.replace(/\s+/g, ' '); 
+                ctx.fillText(formattedShareCode, 520, 480);
+                
+                ctx.shadowBlur = 0; // 繪製完畢重置發光
+                ctx.textAlign = "left"; // 恢復
+            }
+        }
+
+        function downloadCardImage() {
+            const canvas = document.getElementById('shareCardCanvas');
+            const link = document.createElement('a');
+            link.download = `FH6_Card_${currentTuneData.carBrand}_${currentTuneData.carName}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
         function showDiagnosticAdvice() {
+            // ... (動態診斷代碼保持不變) ...
             try {
                 const sit = document.getElementById('sit').value;
                 const prob = document.getElementById('prob').value;
@@ -802,40 +956,24 @@
                 const diagText = document.getElementById('diag-text');
 
                 if (!sit || !prob) {
-                    diagBox.style.display = 'none';
-                    return;
+                    diagBox.style.display = 'none'; return;
                 }
 
                 let advice = "";
-                if (prob === 'under') {
-                    advice = "<strong>【FH6 專家解法：車子不肯轉 / 推頭】</strong><br>1. <strong>防傾桿調整：</strong>軟化前防傾桿 或 加硬後防傾桿。<br>2. <strong>彈簧調整：</strong>軟化前彈簧剛性。<br>3. <strong>胎壓修正：</strong>微調前胎壓增加反應速度。";
-                } else if (prob === 'over') {
-                    advice = "<strong>【FH6 專家解法：車尾甩出 / 轉向過度】</strong><br>1. <strong>防傾桿調整：</strong>軟化後防傾桿 或 加硬前防傾桿。<br>2. <strong>彈簧調整：</strong>軟化後彈簧剛性。<br>3. <strong>胎壓修正：</strong>降低後胎壓（增加觸地面積與抓地力）。";
-                } else if (prob === 'brake_wobble') {
-                    advice = "<strong>【FH6 專家解法：重煞車降檔車身不穩】</strong><br>1. <strong>定位修正：</strong>減少負外傾角（提升煞車直線接觸面積）。<br>2. <strong>差速器優化：</strong>提高後軸差速器的「減速鎖定率 (Deceleration %)」。";
-                } else if (prob === 'mid_under') {
-                    advice = "<strong>【FH6 專家解法：彎中持速抓地不夠】</strong><br>1. <strong>定位修正：</strong>過彎沒抓地，請「增加負外傾角 (Negative Camber)」，前輪建議在 -1.5°到 -2.5°之間。<br>2. <strong>防傾桿微調：</strong>依循『前軟後硬』規則提升前輪彎中循跡性。";
-                } else if (prob === 'mid_over') {
-                    advice = "<strong>【FH6 專家解法：彎中持速後輪漂移】</strong><br>1. <strong>防傾桿調整：</strong>後防傾桿過硬導致失去抓地力，立刻軟化後防傾桿。<br>2. <strong>阻尼優化：</strong>若是車子過彎突然甩動，請「軟化回彈阻尼 (Rebound)」。";
-                } else if (prob === 'twitchy') {
-                    advice = "<strong>【FH6 專家解法：高速彎轉向太敏感】</strong><br>1. <strong>胎壓調整：</strong>車子太神經質，請「稍微降低前/後胎壓」。<br>2. <strong>束角修正：</strong>前束角調整至接近 0°，避免過度的前輪外八。";
-                } else if (prob === 'boat') {
-                    advice = "<strong>【FH6 專家解法：車身側傾過大像坐船】</strong><br>1. <strong>結構加硬：</strong>防傾桿與彈簧整體偏軟，請同步加硬以支撐重心轉移。";
-                } else if (prob === 'exit_under') {
-                    advice = "<strong>【FH6 專家解法：出彎加速推頭 / 補油門很差】</strong><br>1. <strong>齒比修正：</strong>出彎很差請「縮短二檔 / 三檔齒比」以壓榨推進力。<br>2. <strong>防傾桿優化：</strong>軟化前防傾桿以釋放前輪抓地。";
-                } else if (prob === 'exit_over') {
-                    advice = "<strong>【FH6 專家解法：出彎補油易甩動 / 單輪空轉】</strong><br>1. <strong>差速器修正：</strong>單輪空轉請「提高加速鎖定率」；若易擺動甩出，請「降低加速鎖定率 (Acceleration %)」。";
-                } else if (prob === 'curb_bounce') {
-                    advice = "<strong>【FH6 專家解法：過路顛簸 / 壓路緣石彈跳嚴重】</strong><br>1. <strong>阻尼微調：</strong>衝擊過跳請「軟化壓縮阻尼 (Bump Damping)」，微調 1-2 格。<br>2. <strong>彈簧優化：</strong>持續彈跳可增硬回彈阻尼拉住彈簧，或放軟彈簧剛性。";
-                } else if (prob === 'bottom_out') {
-                    advice = "<strong>【FH6 專家解法：行經高低起伏或飛躍著陸觸底】</strong><br>1. <strong>車高修正：</strong>車身高度太低。請立刻「提高車身高度 (Ride Height)」。<br>2. <strong>阻尼補強：</strong>同步加硬整體「彈簧剛性」與前軸「壓縮阻尼 (Bump)」。";
-                } else if (prob === 'float') {
-                    advice = "<strong>【FH6 專家解法：高速公路極速行駛時車身不穩】</strong><br>1. <strong>空力修正：</strong>高速不穩請立刻「增加後空力下壓力 (Rear Downforce)」。<br>2. <strong>車高修正：</strong>確保車身高度前低後高，利用地面效應將車頭吸在地面。";
-                } else if (prob === 'launch_spin') {
-                    advice = "<strong>【FH6 專家解法：起步嚴重打滑空轉】</strong><br>1. <strong>胎壓調整：</strong>確認後輪胎壓已降至最低。<br>2. <strong>齒比修正：</strong>將 1 檔齒比調疏 (數值調小)，或降低最終傳動比。<br>3. <strong>懸吊修正：</strong>確認前彈簧最軟、後彈簧最硬，讓重心順利後移。";
-                } else if (prob === 'top_speed') {
-                    advice = "<strong>【FH6 專家解法：尾速拉不上去 / 極速太低】</strong><br>1. <strong>空力調整：</strong>確認前後空力下壓力已調至最低，減少空氣阻力。<br>2. <strong>齒比修正：</strong>將最終傳動比 (Final Drive) 調疏，或將最高檔位齒比延伸。";
-                }
+                if (prob === 'under') advice = "<strong>【FH6 專家解法：車子不肯轉 / 推頭】</strong><br>1. <strong>防傾桿調整：</strong>軟化前防傾桿 或 加硬後防傾桿。<br>2. <strong>彈簧調整：</strong>軟化前彈簧剛性。<br>3. <strong>胎壓修正：</strong>微調前胎壓增加反應速度。";
+                else if (prob === 'over') advice = "<strong>【FH6 專家解法：車尾甩出 / 轉向過度】</strong><br>1. <strong>防傾桿調整：</strong>軟化後防傾桿 或 加硬前防傾桿。<br>2. <strong>彈簧調整：</strong>軟化後彈簧剛性。<br>3. <strong>胎壓修正：</strong>降低後胎壓（增加觸地面積與抓地力）。";
+                else if (prob === 'brake_wobble') advice = "<strong>【FH6 專家解法：重煞車降檔車身不穩】</strong><br>1. <strong>定位修正：</strong>減少負外傾角（提升煞車直線接觸面積）。<br>2. <strong>差速器優化：</strong>提高後軸差速器的「減速鎖定率 (Deceleration %)」。";
+                else if (prob === 'mid_under') advice = "<strong>【FH6 專家解法：彎中持速抓地不夠】</strong><br>1. <strong>定位修正：</strong>過彎沒抓地，請「增加負外傾角 (Negative Camber)」，前輪建議在 -1.5°到 -2.5°之間。<br>2. <strong>防傾桿微調：</strong>依循『前軟後硬』規則提升前輪彎中循跡性。";
+                else if (prob === 'mid_over') advice = "<strong>【FH6 專家解法：彎中持速後輪漂移】</strong><br>1. <strong>防傾桿調整：</strong>後防傾桿過硬導致失去抓地力，立刻軟化後防傾桿。<br>2. <strong>阻尼優化：</strong>若是車子過彎突然甩動，請「軟化回彈阻尼 (Rebound)」。";
+                else if (prob === 'twitchy') advice = "<strong>【FH6 專家解法：高速彎轉向太敏感】</strong><br>1. <strong>胎壓調整：</strong>車子太神經質，請「稍微降低前/後胎壓」。<br>2. <strong>束角修正：</strong>前束角調整至接近 0°，避免過度的前輪外八。";
+                else if (prob === 'boat') advice = "<strong>【FH6 專家解法：車身側傾過大像坐船】</strong><br>1. <strong>結構加硬：</strong>防傾桿與彈簧整體偏軟，請同步加硬以支撐重心轉移。";
+                else if (prob === 'exit_under') advice = "<strong>【FH6 專家解法：出彎加速推頭 / 補油門很差】</strong><br>1. <strong>齒比修正：</strong>出彎很差請「縮短二檔 / 三檔齒比」以壓榨推進力。<br>2. <strong>防傾桿優化：</strong>軟化前防傾桿以釋放前輪抓地。";
+                else if (prob === 'exit_over') advice = "<strong>【FH6 專家解法：出彎補油易甩動 / 單輪空轉】</strong><br>1. <strong>差速器修正：</strong>單輪空轉請「提高加速鎖定率」；若易擺動甩出，請「降低加速鎖定率 (Acceleration %)」。";
+                else if (prob === 'curb_bounce') advice = "<strong>【FH6 專家解法：過路顛簸 / 壓路緣石彈跳嚴重】</strong><br>1. <strong>阻尼微調：</strong>衝擊過跳請「軟化壓縮阻尼 (Bump Damping)」，微調 1-2 格。<br>2. <strong>彈簧優化：</strong>持續彈跳可增硬回彈阻尼拉住彈簧，或放軟彈簧剛性。";
+                else if (prob === 'bottom_out') advice = "<strong>【FH6 專家解法：行經高低起伏或飛躍著陸觸底】</strong><br>1. <strong>車高修正：</strong>車身高度太低。請立刻「提高車身高度 (Ride Height)」。<br>2. <strong>阻尼補強：</strong>同步加硬整體「彈簧剛性」與前軸「壓縮阻尼 (Bump)」。";
+                else if (prob === 'float') advice = "<strong>【FH6 專家解法：高速公路極速行駛時車身不穩】</strong><br>1. <strong>空力修正：</strong>高速不穩請立刻「增加後空力下壓力 (Rear Downforce)」。<br>2. <strong>車高修正：</strong>確保車身高度前低後高，利用地面效應將車頭吸在地面。";
+                else if (prob === 'launch_spin') advice = "<strong>【FH6 專家解法：起步嚴重打滑空轉】</strong><br>1. <strong>胎壓調整：</strong>確認後輪胎壓已降至最低 (約 15 PSI / 1.0 BAR)。<br>2. <strong>齒比修正：</strong>將 1 檔齒比調疏 (數值調小)，或降低最終傳動比。<br>3. <strong>懸吊修正：</strong>確認前彈簧最軟、後彈簧最硬，讓重心順利後移。";
+                else if (prob === 'top_speed') advice = "<strong>【FH6 專家解法：尾速拉不上去 / 極速太低】</strong><br>1. <strong>空力調整：</strong>確認前後空力下壓力已調至最低，減少空氣阻力。<br>2. <strong>齒比修正：</strong>將最終傳動比 (Final Drive) 調疏，或將最高檔位齒比延伸。";
 
                 diagText.innerHTML = advice;
                 diagBox.style.display = 'block';
@@ -847,38 +985,33 @@
         function downloadTuneReport() {
             try {
                 if (!currentTuneData) {
-                    alert("請先點擊『一鍵計算參數』生成數據後再下載！");
-                    return;
+                    alert("請先點擊『一鍵計算參數』生成數據後再下載！"); return;
                 }
 
                 const d = currentTuneData;
                 let upgradeText = recommendedUpgrades.map((item, index) => `    ${index + 1}. ${item}`).join("\n");
-                
                 let gearListText = "";
-                d.gears.forEach((g, idx) => {
-                    gearListText += `- 第 ${idx + 1} 檔: ${g.toFixed(2)}\n`;
-                });
+                d.gears.forEach((g, idx) => { gearListText += `- 第 ${idx + 1} 檔: ${g.toFixed(2)}\n`; });
+
+                let shareSection = "";
+                const shareCode = document.getElementById('shareCode').value;
+                if (shareCode) {
+                    const accType = document.getElementById('playerAccountType').value;
+                    const accID = document.getElementById('playerAccountID').value || "Anonymous";
+                    shareSection = `\n【社群與官方分享代碼】\n官方 9 位數分享碼: ${shareCode}\n調校作者身分: [${accType.toUpperCase()}] ${accID}\n`;
+                }
 
                 const reportText = `==================================================
-FORZA HORIZON 6 - 專業調校與改裝報告 (FH6 完美參數版)
+FORZA HORIZON 6 - 專業調校與改裝報告
 ==================================================
 【基本車輛規格】
-車型名稱: ${d.carName}
-汽缸體數據: ${d.blockType}
-最大馬力: ${d.hp} HP
-最大扭力: ${d.torque} kg-m/Nm
-最終車重: ${d.weight} kg
+車型名稱: [${d.carBrand}] ${d.carName}
+最大馬力: ${d.hp} HP | 最大扭力: ${d.torque} kg-m/Nm | 最終車重: ${d.weight} kg
 前後配重: 前輪 ${d.frontRatio}% / 後輪 ${100 - d.frontRatio}%
-驅動配置: ${d.driveType}
-設定風格: ${d.style}
-變速箱配置: ${d.gears.length} 檔位設定
-
+驅動配置: ${d.driveType} | 設定風格: ${d.style}
+${shareSection}
 --------------------------------------------------
-【🛠️ 步驟一：改裝解鎖件 (FH6動態分流版)】
-${upgradeText}
-
---------------------------------------------------
-⚙️ 【步驟二：精準調校參數清單】
+⚙️ 【精準改裝與調校參數清單】
 > 胎寬建議 (前): ${d.tireWidthF}
 > 胎寬建議 (後): ${d.tireWidthR}
 > 輪圈尺寸 (前): ${d.wheelF}
@@ -898,19 +1031,18 @@ ${upgradeText}
 10. 差速器設定: 前軸 [${d.diffF}] | 後軸 [${d.diffR}]
 
 --------------------------------------------------
-📊 【步驟三：智慧變速箱齒比清單】
+📊 【智慧變速箱齒比清單】
 - 最終傳動比 (Final Drive): ${d.finalDrive}
 ${gearListText}
-==================================================`;
+==================================================
+POWERED BY OZLM0806 FH6 CALCULATOR`;
 
                 const blob = new Blob([reportText], { type: "text/plain;charset=utf-8" });
                 const url = URL.createObjectURL(blob);
                 const link = document.createElement("a");
                 link.href = url;
-                link.download = `FH6_Tune_Report_${d.carName.replace(/\s+/g, '_')}.txt`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+                link.download = `FH6_Report_${d.carBrand}_${d.carName.replace(/\s+/g, '_')}.txt`;
+                document.body.appendChild(link); link.click(); document.body.removeChild(link);
                 URL.revokeObjectURL(url);
             } catch(e) {
                 alert("導出報告發生錯誤: " + e.message);
