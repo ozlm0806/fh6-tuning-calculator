@@ -884,59 +884,55 @@
 
             // 2. 開始「雷射燙印」純數據
             
-            // 品牌與型號 (MAKE & MODEL)
+            // 品牌與型號 (MAKE & MODEL) - 往下微調對齊底線
             ctx.fillStyle = "#ffffff";
-            ctx.font = "bold 32px Segoe UI, sans-serif";
-            ctx.fillText(d.carBrand.toUpperCase(), 80, 205); // MAKE 坐標
-            
-            ctx.font = "bold 38px Segoe UI, sans-serif";
-            ctx.fillText(d.carName, 80, 290); // MODEL 坐標
-
-            // 調校風格與級別 (STYLE & PI CLASS)
-            ctx.fillStyle = "#ffffff";
+            ctx.textAlign = "left";
             ctx.font = "bold 30px Segoe UI, sans-serif";
-            // 置中對齊以符合框格
-            ctx.textAlign = "center"; 
-            ctx.fillText(d.style.toUpperCase(), 665, 235); // STYLE 框中心坐標
-            ctx.fillText(d.piClass.toUpperCase(), 865, 235); // PI CLASS 框中心坐標
-            ctx.textAlign = "left"; // 恢復靠左對齊
-
-            // 性能小字數據 (HORSEPOWER, WEIGHT, FRONT %)
-            ctx.fillStyle = "#ffffff";
-            ctx.font = "bold 22px Segoe UI, sans-serif";
-            ctx.textAlign = "center";
-            ctx.fillText(`${d.hp} HP`, 580, 310);
-            ctx.fillText(`${d.weight} KG`, 740, 310);
-            ctx.fillText(`${d.frontRatio}%`, 890, 310);
+            ctx.fillText(d.carBrand.toUpperCase(), 100, 235); // 對齊 MAKE 底線
             
-            // 扭力數據 (TORQUE)
-            ctx.fillText(`${d.torque} KG-M`, 380, 345);
-            ctx.textAlign = "left"; // 恢復
+            ctx.font = "bold 36px Segoe UI, sans-serif";
+            ctx.fillText(d.carName, 100, 320); // 對齊 MODEL 底線
 
-            // 右上角社群 ID (Xbox 或 Threads 帳號名)
+            // 調校風格與級別 (STYLE & PI CLASS) - 往右挪進黑框正中央
             ctx.fillStyle = "#ffffff";
-            ctx.font = "bold 20px monospace, sans-serif";
+            ctx.font = "bold 26px Segoe UI, sans-serif";
+            ctx.textAlign = "center"; 
+            ctx.fillText(d.style.toUpperCase(), 650, 240); // 置中於 STYLE 框
+            ctx.fillText(d.piClass.toUpperCase(), 835, 240); // 置中於 PI CLASS 框
+
+            // 性能小字數據 (HORSEPOWER, WEIGHT, FRONT %) - 往下微調對齊底線
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "bold 20px Segoe UI, sans-serif";
             ctx.textAlign = "center";
+            ctx.fillText(`${d.hp} HP`, 610, 345);
+            ctx.fillText(`${d.weight} KG`, 740, 345);
+            ctx.fillText(`${d.frontRatio}%`, 880, 345);
+            
+            // 扭力數據 (TORQUE) - 往下微調
+            ctx.fillText(`${d.torque} KG-M`, 395, 385);
+
+            // 右上角社群 ID (Xbox 或 Threads 帳號名) - 往下微調避開 TUNED BY
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "bold 18px monospace, sans-serif";
             // 加上 @ 符號如果選的是 Threads
             let displayId = d.accountType === "threads" ? `@${d.accountID}` : d.accountID;
-            ctx.fillText(displayId, 885, 140); 
-            ctx.textAlign = "left"; // 恢復
+            ctx.fillText(displayId, 885, 165); 
 
-            // 🌟 最重要的：9位數官方分享碼 (加上發光特效)
+            // 🌟 最重要的：9位數官方分享碼 (加上發光特效) - 往上拉進橘色大括號
             if(d.shareCode) {
                 ctx.fillStyle = "#ff3838";
-                ctx.font = "bold 90px monospace, sans-serif";
-                ctx.textAlign = "center";
-                ctx.shadowBlur = 20;
+                ctx.font = "bold 75px monospace, sans-serif"; // 稍微縮小字體以適應框格
+                ctx.shadowBlur = 15;
                 ctx.shadowColor = "#ff3838";
                 
                 // 為了視覺霸氣，字元間距用簡單空格模擬，置中於橘框
                 let formattedShareCode = d.shareCode.replace(/\s+/g, ' '); 
-                ctx.fillText(formattedShareCode, 520, 480);
+                ctx.fillText(formattedShareCode, 512, 450); // 對齊下方橘框正中央
                 
                 ctx.shadowBlur = 0; // 繪製完畢重置發光
-                ctx.textAlign = "left"; // 恢復
             }
+
+            ctx.textAlign = "left"; // 繪製完畢後恢復畫布預設對齊
         }
 
         function downloadCardImage() {
